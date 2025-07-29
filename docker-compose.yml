@@ -1,4 +1,3 @@
-version: "3"
 services:
   db:
     image: postgres:11-alpine
@@ -8,3 +7,19 @@ services:
       POSTGRES_DB: workout
     ports:
       - "5432:5432"
+
+  workout-api:
+    build: .
+    command: uvicorn workout_api.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: workout
+      DB_PASSWORD: workout
+      DB_NAME: workout
+    depends_on:
+      - db
